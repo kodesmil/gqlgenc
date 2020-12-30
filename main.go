@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/99designs/gqlgen/api"
-	"github.com/Yamashou/gqlgenc/clientgen"
-	"github.com/Yamashou/gqlgenc/config"
-	"github.com/Yamashou/gqlgenc/generator"
+	"github.com/kodesmil/gqlgenc/clientgen"
+	"github.com/kodesmil/gqlgenc/config"
+	"github.com/kodesmil/gqlgenc/generator"
 )
 
 func main() {
