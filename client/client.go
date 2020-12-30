@@ -39,20 +39,18 @@ func NewClient(client *http.Client, baseURL string, options ...HTTPRequestOption
 	}
 }
 
-func removeNils(initialMap map[string]interface{}) map[string]interface{} {
-	withoutNils := map[string]interface{}{}
-	for key, value := range initialMap {
+func removeNils(vars map[string]interface{}) map[string]interface{} {
+	for key, value := range vars {
 		_, ok := value.(map[string]interface{})
 		if ok {
 			value = removeNils(value.(map[string]interface{}))
-			withoutNils[key] = value
 			continue
 		}
-		if value != nil {
-			withoutNils[key] = value
+		if value == nil {
+			delete(vars, key)
 		}
 	}
-	return withoutNils
+	return vars
 }
 
 func (c *Client) newRequest(ctx context.Context, query string, vars map[string]interface{}, httpRequestOptions []HTTPRequestOption) (*http.Request, error) {
