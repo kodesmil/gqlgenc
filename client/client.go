@@ -39,13 +39,28 @@ func NewClient(client *http.Client, baseURL string, options ...HTTPRequestOption
 	}
 }
 
+func removeNils(initialMap map[string]interface{}) map[string]interface{} {
+	withoutNils := map[string]interface{}{}
+	for key, value := range initialMap {
+		_, ok := value.(map[string]interface{})
+		if ok {
+			value = removeNils(value.(map[string]interface{}))
+			withoutNils[key] = value
+			continue
+		}
+		if value != nil {
+			withoutNils[key] = value
+		}
+	}
+	return withoutNils
+}
+
 func (c *Client) newRequest(ctx context.Context, query string, vars map[string]interface{}, httpRequestOptions []HTTPRequestOption) (*http.Request, error) {
 	r := &Request{
 		Query:         query,
-		Variables:     vars,
+		Variables:     removeNils(vars),
 		OperationName: "",
 	}
-
 	requestBody, err := json.Marshal(r)
 	if err != nil {
 		return nil, xerrors.Errorf("encode: %w", err)
