@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/kodesmil/gqlgenc/graphqljson"
@@ -43,10 +44,12 @@ func removeNils(vars map[string]interface{}) map[string]interface{} {
 	for key, value := range vars {
 		_, ok := value.(map[string]interface{})
 		if ok {
+			log.Println("recursive")
 			value = removeNils(value.(map[string]interface{}))
 			continue
 		}
 		if value == nil {
+			log.Println("found null " + key)
 			delete(vars, key)
 		}
 	}
